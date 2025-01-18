@@ -1,0 +1,43 @@
+.page {
+  background-color: #f5f5f5;
+  color: #333;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  text-align: center;
+  min-height: 100vh;
+}
+
+.title {
+  color: #4caf50;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.button {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  cursor: pointer; /* Show a pointer when hovering */
+  border-radius: 5px; /* Slightly rounded corners */
+  font-size: 1rem;
+}
+.button:disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+.container {
+  background-color: #ffffff;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 50%;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}

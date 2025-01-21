@@ -1,64 +1,69 @@
 import "./App.css";
 import React, { useState } from "react";
-import axios from "axios"; // Import Axios
+import axios from "axios";
 
 function App() {
   const [originLat, setOriginLat] = useState("");
   const [originLng, setOriginLng] = useState("");
   const [destLat, setDestLat] = useState("");
   const [destLng, setDestLng] = useState("");
-
-  const [loading, setLoading] = useState(false); // To show the loader
-  const [distance, setDistance] = useState(null); // To store distance
-  const [duration, setDuration] = useState(null); // To store duration
-  const [error, setError] = useState(null); // To show errors
-  const [mode, setMode] = useState("driving");
+  const [loading, setLoading] = useState(false);
+  const [distance, setDistance] = useState(null);
+  const [duration, setDuration] = useState(null);
+  const [error, setError] = useState(null);
+  const [weatherFactor, setWeatherFactor] = useState(1); // Default weather coefficient
 
   const calculateDistance = async () => {
     if (!originLat || !originLng || !destLat || !destLng) {
       setError("Please fill in all latitude and longitude fields.");
       return;
     }
-    setLoading(true); // Show the loader
-    setError(null); // Reset error
+    setLoading(true);
+    setError(null);
 
     try {
-      const response = await axios.get(
-
-        `https://api.distancematrix.ai/maps/api/distancematrix/json`, // API endpoint
-        
+      const response = await axios.post(
+        "https://api.openrouteservice.org/v2/directions/driving-car",
         {
-          params: {
-            origins: `${originLat},${originLng}`,
-            destinations: `${destLat},${destLng}`,
-            key: "4TJmI0Kb81MdXH5Au5cD46emIaJ22gbNFXVOpvgj28HyRBnv3XbDaF4yObTTYUDW", 
-            mode: mode, 
+          coordinates: [
+            [parseFloat(originLng), parseFloat(originLat)],
+            [parseFloat(destLng), parseFloat(destLat)],
+          ],
+          preference: "fastest",
+          geometry: false,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer 5b3ce3597851110001cf6248a211a767c9284c9296924e1382074772",
           },
         }
       );
 
       console.log("API Response:", response.data);
-      const result = response.data.rows[0].elements[0];
-      if (result.status === "OK") {
-        setDistance(result.distance.text);
-        setDuration(result.duration.text);
+      const result = response.data.routes[0].summary;
+
+      if (result) {
+        const adjustedDuration = result.duration / 60 * weatherFactor; // Adjust duration with weather
+        setDistance((result.distance / 1000).toFixed(2) + " km");
+        setDuration(adjustedDuration.toFixed(2) + " minutes");
       } else {
-        setError("No results for the selected travel mode and coordinates.");
+        setError("No results found for the provided coordinates.");
       }
     } catch (err) {
       console.error("Error fetching data:", err);
       setError("Failed to fetch data. Please try again.");
     } finally {
-      setLoading(false); // Stop showing the loader
+      setLoading(false);
     }
   };
 
   return (
-    <div className="page" style={{ textAlign: "center", marginTop: "50px" }}>
+    <div className="page">
       <h1 className="title">Distance Calculator</h1>
 
       {/* Input fields for latitude and longitude */}
-      <div style={{ marginBottom: "20px" }}>
+      <div>
         <h3>Enter Origin Coordinates:</h3>
         <input
           type="number"
@@ -74,7 +79,6 @@ function App() {
           onChange={(e) => setOriginLng(e.target.value)}
           className="input"
         />
-
         <h3>Enter Destination Coordinates:</h3>
         <input
           type="number"
@@ -92,45 +96,39 @@ function App() {
         />
       </div>
 
-      {/* Buttons for travel modes */}
-      <div style={{ marginBottom: "20px" }}>
-        <button
-          onClick={() => setMode("driving")}
-          disabled={loading}
-          style={{ margin: "5px" }}
-        >
-          Car
+      {/* Weather condition buttons */}
+      <div>
+        <h3>Select Weather Condition:</h3>
+        <button className="button" onClick={() => setWeatherFactor(1)}>
+          Clear/Sunny (x1)
         </button>
-        <button
-          onClick={() => setMode("bicycling")}
-          disabled={loading}
-          style={{ margin: "5px" }}
-        >
-          Bicycle
+        <button className="button" onClick={() => setWeatherFactor(1.1)}>
+          Light Rain (x1.1)
         </button>
-        <button
-          onClick={() => setMode("walking")}
-          disabled={loading}
-          style={{ margin: "5px" }}
-        >
-          Walking
+        <button className="button" onClick={() => setWeatherFactor(1.25)}>
+          Heavy Rain (x1.25)
+        </button>
+        <button className="button" onClick={() => setWeatherFactor(1.5)}>
+          Snow (x1.5)
+        </button>
+        <button className="button" onClick={() => setWeatherFactor(1.2)}>
+          Fog (x1.2)
         </button>
       </div>
 
-      {/* Button to calculate distance */}
-      <button onClick={calculateDistance} disabled={loading}>
-        {loading ? "Calculating..." : "Find Distance and Time"}
+      {/* Calculate button */}
+      <button className="button" onClick={calculateDistance} disabled={loading}>
+        {loading ? "Calculating..." : "Calculate Distance and Time"}
       </button>
 
+      {/* Error or Results */}
       {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {/* Display the distance and duration */}
+      {error && <p className="error">{error}</p>}
       {distance && duration && (
         <div className="container">
-          <p>Travel Mode: {mode.charAt(0).toUpperCase() + mode.slice(1)}</p>
+          <p>Weather Coefficient: {weatherFactor}</p>
           <p>Distance: {distance}</p>
-          <p>Duration: {duration}</p>
+          <p>Adjusted Travel Time: {duration}</p>
         </div>
       )}
     </div>
@@ -138,3 +136,4 @@ function App() {
 }
 
 export default App;
+

@@ -1,64 +1,110 @@
-/* Page styling */
-.page {
-  background-color: #e8f5e9; /* Light green for background */
-  color: #2e7d32; /* Darker green for text */
-  font-family: "Arial", sans-serif;
-  padding: 20px;
-  text-align: center;
+/* app.css */
+
+/* General styling for the entire app */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f8fb;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   min-height: 100vh;
 }
 
-/* Title styling */
-.title {
-  color: #388e3c;
-  font-size: 2.5rem;
-  margin-bottom: 30px;
-}
-
-/* Button styling */
-.button {
-  background-color: #66bb6a; /* Green shade for buttons */
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  margin: 10px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 1rem;
-  transition: background-color 0.3s;
-}
-.button:hover {
-  background-color: #338a3e; /* Slightly darker green on hover */
-}
-.button:disabled {
-  background-color: #c8e6c9; /* Lighter green for disabled state */
-  color: #777;
-  cursor: not-allowed;
-}
-
-/* Input fields styling */
-.input {
-  width: 200px;
-  padding: 10px;
-  margin: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 1rem;
-}
-
-/* Container styling */
-.container {
-  background-color: #ffffff;
-  padding: 20px;
-  margin: 20px auto;
+.app {
+  background: white;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 60%;
+  width: 90%;
+  max-width: 600px;
+  padding: 20px;
+  text-align: center;
 }
 
-/* Error message styling */
+h1 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+h3 {
+  font-size: 18px;
+  color: #444;
+  margin: 15px 0;
+}
+
+input {
+  display: block;
+  width: calc(100% - 20px);
+  max-width: 300px;
+  padding: 10px;
+  margin: 10px auto;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+button {
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #005a9e;
+}
+
 .error {
   color: red;
-  font-weight: bold;
-  margin-top: 15px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.results {
+  margin-top: 20px;
+}
+
+.results h3 {
+  font-size: 20px;
+  color: #333;
+}
+
+.results p {
+  font-size: 16px;
+  color: #555;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .app {
+    padding: 15px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  input,
+  button {
+    font-size: 14px;
+  }
+
+  .results h3 {
+    font-size: 18px;
+  }
+
+  .results p {
+    font-size: 14px;
+  }
 }
